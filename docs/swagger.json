@@ -1,0 +1,29 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Event tracking documentation for the social networking app focused on sharing vibes.",
+        "title": "Event Tracking API Documentation",
+        "contact": {
+            "name": "Rok Mokotar",
+            "url": "https://www.linkedin.com/in/mokot/",
+            "email": "rm6551@student.uni-lj.si"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/events": {
+            "get": {
+                "description": "get events",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List events",
+                "operationId": "get-events",
+                "responses": {}
+            }
+        }
+    }
+}

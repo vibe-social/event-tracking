@@ -20,8 +20,12 @@ type UpdateEventRequest struct {
 	Content string `json:"content"`
 }
 
-// GET /events
-// Find all events
+// @Summary List events
+// @Description get events
+// @ID get-events
+// @Accept  json
+// @Produce  json
+// @Router /events [get]
 func FindEvents(context *gin.Context) {
 	var events []models.Event
 	models.DB.Find(&events)
@@ -29,10 +33,7 @@ func FindEvents(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": events})
 }
 
-// GET /events/:id
-// Find an event
 func FindEvent(context *gin.Context) {
-	// Get model if exist
 	var event models.Event
 	if err := models.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
@@ -42,34 +43,26 @@ func FindEvent(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
 
-// POST /events
-// Create new event
 func CreateEvent(context *gin.Context) {
-	// Validate request
 	var request CreateEventRequest
 	if err := context.ShouldBindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Create event
 	event := models.Event{Type: request.Type, UserId: request.UserId, Content: request.Content}
 	models.DB.Create(&event)
 
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
 
-// PATCH /events/:id
-// Update a event
 func UpdateEvent(context *gin.Context) {
-	// Get model if exist
 	var event models.Event
 	if err := models.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
 
-	// Validate request
 	var request UpdateEventRequest
 	if err := context.ShouldBindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -81,8 +74,6 @@ func UpdateEvent(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
 
-// DELETE /events/:id
-// Delete a event
 func DeleteEvent(context *gin.Context) {
 	// Get model if exist
 	var event models.Event
