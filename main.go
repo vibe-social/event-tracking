@@ -7,28 +7,9 @@ import (
 	_ "event-tracking/docs"
 
 	"github.com/gin-gonic/gin"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
-
-var cpuTemp = prometheus.NewGauge(prometheus.GaugeOpts{
-	Name: "cpu_temperature_celsius",
-	Help: "Current temperature of the CPU.",
-})
-
-func init() {
-	prometheus.MustRegister(cpuTemp)
-}
-
-func prometheusHandler() gin.HandlerFunc {
-	h := promhttp.Handler()
-
-	return func(c *gin.Context) {
-		h.ServeHTTP(c.Writer, c.Request)
-	}
-}
 
 // @title Event Tracking API Documentation
 // @description Event tracking documentation for the social networking app focused on sharing vibes.
@@ -46,7 +27,8 @@ func main() {
 	// Swagger documentation endpoint
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	router.GET("/metrics", prometheusHandler())
+	// Prometheus metrics endpoint
+	router.GET("/metrics", controllers.PrometheusHandler())
 
 	// Health check endpoint
 	router.GET("/health", controllers.CheckHealth)
@@ -57,8 +39,6 @@ func main() {
 	router.POST("/events", controllers.CreateEvent)
 	router.PATCH("/events/:id", controllers.UpdateEvent)
 	router.DELETE("/events/:id", controllers.DeleteEvent)
-
-	// TODO - Add a route to handle metrics
 
 	// Run the server
 	router.Run(":8080")

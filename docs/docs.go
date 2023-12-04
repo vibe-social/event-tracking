@@ -46,6 +46,20 @@ const docTemplate = `{
                 "operationId": "health-check",
                 "responses": {}
             }
+        },
+        "/metrics": {
+            "get": {
+                "description": "Prometheus metrics",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "Prometheus metrics",
+                "operationId": "prometheus-metrics",
+                "responses": {}
+            }
         }
     }
 }`
