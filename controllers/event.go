@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"event-tracking/database"
 	"event-tracking/models"
 
 	"github.com/gin-gonic/gin"
@@ -28,14 +29,14 @@ type UpdateEventRequest struct {
 // @Router /events [get]
 func FindEvents(context *gin.Context) {
 	var events []models.Event
-	models.DB.Find(&events)
+	database.DB.Find(&events)
 
 	context.JSON(http.StatusOK, gin.H{"data": events})
 }
 
 func FindEvent(context *gin.Context) {
 	var event models.Event
-	if err := models.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
+	if err := database.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -51,14 +52,14 @@ func CreateEvent(context *gin.Context) {
 	}
 
 	event := models.Event{Type: request.Type, UserId: request.UserId, Content: request.Content}
-	models.DB.Create(&event)
+	database.DB.Create(&event)
 
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
 
 func UpdateEvent(context *gin.Context) {
 	var event models.Event
-	if err := models.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
+	if err := database.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
@@ -69,7 +70,7 @@ func UpdateEvent(context *gin.Context) {
 		return
 	}
 
-	models.DB.Model(&event).Updates(request)
+	database.DB.Model(&event).Updates(request)
 
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
@@ -77,12 +78,12 @@ func UpdateEvent(context *gin.Context) {
 func DeleteEvent(context *gin.Context) {
 	// Get model if exist
 	var event models.Event
-	if err := models.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
+	if err := database.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
 
-	models.DB.Delete(&event)
+	database.DB.Delete(&event)
 
 	context.JSON(http.StatusOK, gin.H{"data": true})
 }

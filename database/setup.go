@@ -1,6 +1,9 @@
-package models
+package database
 
 import (
+	"event-tracking/models"
+
+	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -8,13 +11,13 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	dsn := "user=postgres password=VibeSocial42! host=db.axbxrkgbggekcrraugfk.supabase.co port=5432 dbname=postgres"
+	dsn := viper.GetString("DATABASE_DSN")
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("Failed to connect to database!")
 	}
 
-	err = database.AutoMigrate(&Event{})
+	err = database.AutoMigrate(&models.Event{})
 	if err != nil {
 		panic("Failed to migrate database!")
 	}
