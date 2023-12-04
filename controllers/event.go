@@ -20,10 +20,10 @@ type UpdateEventRequest struct {
 	Content string `json:"content"`
 }
 
+// @Tags events
+// @ID get-events
 // @Summary List events
 // @Description get events
-// @ID get-events
-// @Accept  json
 // @Produce  json
 // @Router /events [get]
 func FindEvents(context *gin.Context) {

@@ -7,9 +7,28 @@ import (
 	_ "event-tracking/docs"
 
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+var cpuTemp = prometheus.NewGauge(prometheus.GaugeOpts{
+	Name: "cpu_temperature_celsius",
+	Help: "Current temperature of the CPU.",
+})
+
+func init() {
+	prometheus.MustRegister(cpuTemp)
+}
+
+func prometheusHandler() gin.HandlerFunc {
+	h := promhttp.Handler()
+
+	return func(c *gin.Context) {
+		h.ServeHTTP(c.Writer, c.Request)
+	}
+}
 
 // @title Event Tracking API Documentation
 // @description Event tracking documentation for the social networking app focused on sharing vibes.
@@ -21,13 +40,18 @@ func main() {
 	// Create a default gin router
 	router := gin.Default()
 
-	// Add the swagger endpoint
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
 	// Connect to database
 	models.ConnectDatabase()
 
-	// Specify the routes and the controllers
+	// Swagger documentation endpoint
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	router.GET("/metrics", prometheusHandler())
+
+	// Health check endpoint
+	router.GET("/health", controllers.CheckHealth)
+
+	// Specify the events routes and the controllers
 	router.GET("/events", controllers.FindEvents)
 	router.GET("/events/:id", controllers.FindEvent)
 	router.POST("/events", controllers.CreateEvent)

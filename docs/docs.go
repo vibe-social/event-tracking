@@ -22,14 +22,28 @@ const docTemplate = `{
         "/events": {
             "get": {
                 "description": "get events",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "events"
+                ],
                 "summary": "List events",
                 "operationId": "get-events",
+                "responses": {}
+            }
+        },
+        "/health": {
+            "get": {
+                "description": "health check",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Health check",
+                "operationId": "health-check",
                 "responses": {}
             }
         }

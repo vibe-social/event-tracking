@@ -10,12 +10,22 @@ info:
 paths:
   /events:
     get:
-      consumes:
-      - application/json
       description: get events
       operationId: get-events
       produces:
       - application/json
       responses: {}
       summary: List events
+      tags:
+      - events
+  /health:
+    get:
+      description: health check
+      operationId: health-check
+      produces:
+      - application/json
+      responses: {}
+      summary: Health check
+      tags:
+      - health
 swagger: "2.0"
