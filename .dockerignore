@@ -1,0 +1,9 @@
+# Ignore git files
+.gitignore
+.git/
+
+# Ignore config files
+.example.env
+
+# Ignore build files
+main
