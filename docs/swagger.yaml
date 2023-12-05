@@ -1,3 +1,26 @@
+definitions:
+  controllers.CreateEventRequest:
+    properties:
+      content:
+        type: string
+      type:
+        type: string
+      user_id:
+        type: string
+    required:
+    - content
+    - type
+    - user_id
+    type: object
+  controllers.UpdateEventRequest:
+    properties:
+      content:
+        type: string
+      type:
+        type: string
+      user_id:
+        type: string
+    type: object
 info:
   contact:
     email: rm6551@student.uni-lj.si
@@ -16,6 +39,78 @@ paths:
       - application/json
       responses: {}
       summary: List events
+      tags:
+      - events
+    post:
+      consumes:
+      - application/json
+      description: create event
+      operationId: create-event
+      parameters:
+      - description: Event
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateEventRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Create event
+      tags:
+      - events
+  /events/{id}:
+    delete:
+      description: delete event
+      operationId: delete-event
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete event
+      tags:
+      - events
+    get:
+      description: get event
+      operationId: get-event
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get event
+      tags:
+      - events
+    patch:
+      consumes:
+      - application/json
+      description: update event
+      operationId: update-event
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Event
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UpdateEventRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Update event
       tags:
       - events
   /health:

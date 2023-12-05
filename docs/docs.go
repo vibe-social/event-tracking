@@ -31,6 +31,109 @@ const docTemplate = `{
                 "summary": "List events",
                 "operationId": "get-events",
                 "responses": {}
+            },
+            "post": {
+                "description": "create event",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Create event",
+                "operationId": "create-event",
+                "parameters": [
+                    {
+                        "description": "Event",
+                        "name": "event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.CreateEventRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/events/{id}": {
+            "get": {
+                "description": "get event",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Get event",
+                "operationId": "get-event",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "description": "delete event",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Delete event",
+                "operationId": "delete-event",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "patch": {
+                "description": "update event",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "events"
+                ],
+                "summary": "Update event",
+                "operationId": "update-event",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Event",
+                        "name": "event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.UpdateEventRequest"
+                        }
+                    }
+                ],
+                "responses": {}
             }
         },
         "/health": {
@@ -59,6 +162,41 @@ const docTemplate = `{
                 "summary": "Prometheus metrics",
                 "operationId": "prometheus-metrics",
                 "responses": {}
+            }
+        }
+    },
+    "definitions": {
+        "controllers.CreateEventRequest": {
+            "type": "object",
+            "required": [
+                "content",
+                "type",
+                "user_id"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.UpdateEventRequest": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
             }
         }
     }

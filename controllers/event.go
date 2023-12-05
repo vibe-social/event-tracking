@@ -34,6 +34,13 @@ func FindEvents(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": events})
 }
 
+// @Tags events
+// @ID get-event
+// @Summary Get event
+// @Description get event
+// @Produce  json
+// @Param id path int true "Event ID"
+// @Router /events/{id} [get]
 func FindEvent(context *gin.Context) {
 	var event models.Event
 	if err := database.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
@@ -44,6 +51,14 @@ func FindEvent(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
 
+// @Tags events
+// @ID create-event
+// @Summary Create event
+// @Description create event
+// @Accept  json
+// @Produce  json
+// @Param event body CreateEventRequest true "Event"
+// @Router /events [post]
 func CreateEvent(context *gin.Context) {
 	var request CreateEventRequest
 	if err := context.ShouldBindJSON(&request); err != nil {
@@ -57,6 +72,15 @@ func CreateEvent(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
 
+// @Tags events
+// @ID update-event
+// @Summary Update event
+// @Description update event
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Event ID"
+// @Param event body UpdateEventRequest true "Event"
+// @Router /events/{id} [patch]
 func UpdateEvent(context *gin.Context) {
 	var event models.Event
 	if err := database.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
@@ -75,6 +99,13 @@ func UpdateEvent(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
 
+// @Tags events
+// @ID delete-event
+// @Summary Delete event
+// @Description delete event
+// @Produce  json
+// @Param id path int true "Event ID"
+// @Router /events/{id} [delete]
 func DeleteEvent(context *gin.Context) {
 	// Get model if exist
 	var event models.Event
