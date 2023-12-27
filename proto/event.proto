@@ -3,9 +3,9 @@ syntax = "proto3";
 option go_package = "/proto";
 
 message Event {
-  string event_id = 1;
-  string event_timestamp = 2;
-  string event_type = 3;
-  string user_id = 4;
-  string event_content = 5;
+  string id = 1;
+  string timestamp = 2;
+  string type = 3;
+  string content = 4;
+  string user_id = 5;
 }

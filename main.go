@@ -4,6 +4,7 @@ import (
 	"event-tracking/configs"
 	"event-tracking/controllers"
 	"event-tracking/database"
+	"event-tracking/kafka"
 	"fmt"
 	"log"
 
@@ -40,6 +41,9 @@ func main() {
 
 	// Connect to database
 	database.ConnectDatabase()
+
+	// Connect to Azure Event Hub
+	kafka.ConnectEventHub()
 
 	// Swagger documentation endpoint
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

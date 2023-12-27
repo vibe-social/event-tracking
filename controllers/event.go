@@ -4,8 +4,10 @@ import (
 	"net/http"
 
 	"event-tracking/database"
+	"event-tracking/kafka"
 	"event-tracking/models"
 
+	eventhub "github.com/Azure/azure-event-hubs-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -68,6 +70,8 @@ func CreateEvent(context *gin.Context) {
 
 	event := models.Event{Type: request.Type, UserId: request.UserId, Content: request.Content}
 	database.DB.Create(&event)
+
+	kafka.EH.Send(context, eventhub.NewEventFromString("hello, world!")) // TODO
 
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
