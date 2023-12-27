@@ -1,11 +1,13 @@
 package controllers
 
 import (
+	"context"
 	"net/http"
 
 	"event-tracking/database"
 	"event-tracking/kafka"
 	"event-tracking/models"
+	"event-tracking/proto"
 
 	eventhub "github.com/Azure/azure-event-hubs-go"
 	"github.com/gin-gonic/gin"
@@ -71,8 +73,6 @@ func CreateEvent(context *gin.Context) {
 	event := models.Event{Type: request.Type, UserId: request.UserId, Content: request.Content}
 	database.DB.Create(&event)
 
-	kafka.EH.Send(context, eventhub.NewEventFromString("hello, world!")) // TODO
-
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
 
@@ -121,4 +121,20 @@ func DeleteEvent(context *gin.Context) {
 	database.DB.Delete(&event)
 
 	context.JSON(http.StatusOK, gin.H{"data": true})
+}
+
+type Server struct{}
+
+// @Tags events
+// @ID create-event-grpc
+// @Summary Create event
+// @Description create event
+func (s *Server) CreateEvent(context context.Context, event *proto.Event) (*proto.Event, error) {
+	// Convert event to byte[]
+	eventBytes := []byte(event.String())
+
+	// Send the event to Azure Event Hub
+	kafka.EH.Send(context, eventhub.NewEvent(eventBytes))
+
+	return event, nil
 }

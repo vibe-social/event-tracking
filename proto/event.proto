@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package proto;
+
 option go_package = "/proto";
 
 message Event {
@@ -8,4 +10,8 @@ message Event {
   string type = 3;
   string content = 4;
   string user_id = 5;
+}
+
+service EventService {
+  rpc CreateEvent(Event) returns (Event) {}
 }

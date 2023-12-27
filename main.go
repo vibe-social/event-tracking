@@ -5,8 +5,11 @@ import (
 	"event-tracking/controllers"
 	"event-tracking/database"
 	"event-tracking/kafka"
+	"event-tracking/proto"
 	"fmt"
 	"log"
+	"net"
+	"sync"
 
 	_ "event-tracking/docs"
 
@@ -14,6 +17,8 @@ import (
 	"github.com/spf13/viper"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 // @title Event Tracking API Documentation
@@ -26,18 +31,22 @@ func main() {
 	// Set configuration parameters
 	configs.LoadConfig()
 
-	// Set the router mode
-	routerMode := viper.GetString("SERVER_MODE")
-	if routerMode == "release" {
+	// Set the server mode
+	serverMode := viper.GetString("SERVER_MODE")
+	if serverMode == "release" {
 		gin.SetMode(gin.ReleaseMode)
-	} else if routerMode == "test" {
+	} else if serverMode == "test" {
 		gin.SetMode(gin.TestMode)
 	} else {
 		gin.SetMode(gin.DebugMode)
 	}
 
-	// Create a default gin router
-	router := gin.Default()
+	// Create the HTTP server
+	httpServer := gin.Default()
+
+	// Create the gRPC server
+	server := controllers.Server{}
+	grpcServer := grpc.NewServer()
 
 	// Connect to database
 	database.ConnectDatabase()
@@ -46,25 +55,57 @@ func main() {
 	kafka.ConnectEventHub()
 
 	// Swagger documentation endpoint
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	router.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	httpServer.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	httpServer.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Prometheus metrics endpoint
-	router.GET("/metrics", controllers.PrometheusHandler())
+	httpServer.GET("/metrics", controllers.PrometheusHandler())
 
 	// Health check endpoint
-	router.GET("/health", controllers.CheckHealth)
+	httpServer.GET("/health", controllers.CheckHealth)
 
-	// Specify the events routes and the controllers
-	router.GET("/events", controllers.FindEvents)
-	router.GET("/events/:id", controllers.FindEvent)
-	router.POST("/events", controllers.CreateEvent)
-	router.PATCH("/events/:id", controllers.UpdateEvent)
-	router.DELETE("/events/:id", controllers.DeleteEvent)
+	// Specify the HTTP events endpoints and the controllers
+	httpServer.GET("/events", controllers.FindEvents)
+	httpServer.GET("/events/:id", controllers.FindEvent)
+	httpServer.POST("/events", controllers.CreateEvent)
+	httpServer.PATCH("/events/:id", controllers.UpdateEvent)
+	httpServer.DELETE("/events/:id", controllers.DeleteEvent)
 
-	// Run the server
-	address := fmt.Sprintf(":%d", viper.GetInt("SERVER_PORT"))
-	if err := router.Run(address); err != nil {
-		log.Fatal(err)
-	}
+	// Specify the gRPC events endpoints and the controllers
+	proto.RegisterEventServiceServer(grpcServer, &server)
+
+	// Register reflection service on gRPC server
+	reflection.Register(grpcServer)
+
+	// Create a WaitGroup and add a count of two, one for each goroutine
+	var waitGroup sync.WaitGroup
+
+	// Run the HTTP server in a separate goroutine
+	waitGroup.Add(1)
+	go func() {
+		defer waitGroup.Done()
+		httpAddress := fmt.Sprintf(":%d", viper.GetInt("HTTP_SERVER_PORT"))
+		log.Printf("HTTP server listening on port %s", httpAddress)
+		if err := httpServer.Run(httpAddress); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	// Run the gRPC server in a separate goroutine
+	waitGroup.Add(1)
+	go func() {
+		defer waitGroup.Done()
+		grpcAddress := fmt.Sprintf(":%d", viper.GetInt("GRPC_SERVER_PORT"))
+		log.Printf("gRPC server listening on port %s", grpcAddress)
+		grpcListener, err := net.Listen("tcp", grpcAddress)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err := grpcServer.Serve(grpcListener); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	// Wait for all goroutines to complete
+	waitGroup.Wait()
 }

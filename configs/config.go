@@ -17,6 +17,7 @@ func LoadConfig() {
 	viper.AutomaticEnv()
 
 	// Set default values
-	viper.SetDefault("SERVER_PORT", 8080)
 	viper.SetDefault("SERVER_MODE", "debug")
+	viper.SetDefault("HTTP_SERVER_PORT", 8080)
+	viper.SetDefault("GRPC_SERVER_PORT", 8081)
 }
