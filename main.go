@@ -43,6 +43,7 @@ func main() {
 
 	// Swagger documentation endpoint
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Prometheus metrics endpoint
 	router.GET("/metrics", controllers.PrometheusHandler())
