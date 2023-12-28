@@ -3,11 +3,13 @@ package controllers
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"event-tracking/database"
 	"event-tracking/kafka"
 	"event-tracking/models"
 	"event-tracking/proto"
+	"event-tracking/utils"
 
 	eventhub "github.com/Azure/azure-event-hubs-go"
 	"github.com/gin-gonic/gin"
@@ -52,6 +54,9 @@ func FindEvent(context *gin.Context) {
 // @Param event body models.CreateEventRequest true "Event"
 // @Router /events [post]
 func CreateEvent(context *gin.Context) {
+	// Start measuring the time
+	timer := time.Now()
+
 	var request models.CreateEventRequest
 	if err := context.ShouldBindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -62,6 +67,15 @@ func CreateEvent(context *gin.Context) {
 	database.DB.Create(&event)
 
 	context.JSON(http.StatusOK, gin.H{"data": event})
+
+	// Stop measuring the time and calculate the duration
+	duration := time.Since(timer).Seconds()
+
+	// Trigger the total event processed metric
+	utils.TriggerTotalEventProcessed(models.EventType(event.Type))
+
+	// Trigger the event processing duration metric
+	utils.TriggerEventProcessingDuration(models.EventType(event.Type), duration)
 }
 
 // @Tags events
@@ -118,11 +132,23 @@ type Server struct{}
 // @Summary Create event
 // @Description create event
 func (s *Server) CreateEvent(context context.Context, event *proto.Event) (*proto.Event, error) {
+	// Start measuring the time
+	timer := time.Now()
+
 	// Convert event to byte[]
 	eventBytes := []byte(event.String())
 
 	// Send the event to Azure Event Hub
 	kafka.EH.Send(context, eventhub.NewEvent(eventBytes))
+
+	// Stop measuring the time and calculate the duration
+	duration := time.Since(timer).Seconds()
+
+	// Trigger the total event processed metric
+	utils.TriggerTotalEventProcessed(models.EventType(event.Type))
+
+	// Trigger the event processing duration metric
+	utils.TriggerEventProcessingDuration(models.EventType(event.Type), duration)
 
 	return event, nil
 }

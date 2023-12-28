@@ -54,12 +54,16 @@ func main() {
 	// Connect to Azure Event Hub
 	kafka.ConnectEventHub()
 
+	// Apply the Prometheus middleware
+	httpServer.Use(controllers.PrometheusMiddleware())
+
 	// Swagger documentation endpoint
 	httpServer.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	httpServer.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	// Prometheus metrics endpoint
+	// Prometheus metrics endpoints
 	httpServer.GET("/metrics", controllers.PrometheusHandler())
+	httpServer.GET("/custom-metrics", controllers.CustomPrometheusHandler())
 
 	// Specify the HTTP health endpoints and the controllers
 	httpServer.GET("/health", controllers.CheckHealth)
