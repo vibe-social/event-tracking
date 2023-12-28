@@ -2,6 +2,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: event-tracking-autoscaler
+  namespace: vibe-social
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
