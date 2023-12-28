@@ -7,6 +7,7 @@ import (
 	"event-tracking/utils"
 	"runtime"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
@@ -38,6 +39,7 @@ func init() {
 	prometheus.MustRegister(metrics.KafkaOutgoingRequests)
 	prometheus.MustRegister(metrics.KafkaOutgoingBytes)
 	prometheus.MustRegister(metrics.KafkaOutgoingErrors)
+	prometheus.MustRegister(metrics.Latency)
 
 	// Register custom metrics with custom registry
 	customRegistry.MustRegister(metrics.TotalHttpRequests)
@@ -58,13 +60,19 @@ func init() {
 	customRegistry.MustRegister(metrics.KafkaOutgoingRequests)
 	customRegistry.MustRegister(metrics.KafkaOutgoingBytes)
 	customRegistry.MustRegister(metrics.KafkaOutgoingErrors)
+	customRegistry.MustRegister(metrics.Latency)
 }
 
 func PrometheusMiddleware() gin.HandlerFunc {
 	return func(context *gin.Context) {
+		// Start timer
+		timer := time.Now()
+
+		// Get memory stats
 		memoryStats := new(runtime.MemStats)
 		runtime.ReadMemStats(memoryStats)
 
+		// Get database stats
 		db, _ := database.DB.DB()
 		databaseStats := db.Stats()
 
@@ -111,6 +119,12 @@ func PrometheusMiddleware() gin.HandlerFunc {
 
 		// Continue with the next middleware or route handler
 		context.Next()
+
+		// Measure latency
+		latency := time.Since(timer).Seconds()
+
+		// Trigger latency
+		utils.TriggerLatency(context.Request.Method, context.Request.URL.Path, strconv.Itoa(context.Writer.Status()), latency)
 	}
 }
 

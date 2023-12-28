@@ -94,3 +94,8 @@ func TriggerKafkaOutgoingErrors(topic string) {
 	// Increment Kafka outgoing errors
 	metrics.KafkaOutgoingErrors.WithLabelValues(topic).Inc()
 }
+
+func TriggerLatency(method string, path string, status string, latency float64) {
+	// Observe latency
+	metrics.Latency.WithLabelValues(method, path, status).Observe(latency)
+}

@@ -161,4 +161,14 @@ var (
 		},
 		[]string{"topic"},
 	)
+
+	// Latency of HTTP requests
+	Latency = prometheus.NewHistogramVec(
+		prometheus.HistogramOpts{
+			Name:    "http_request_duration_seconds",
+			Help:    "Latency of HTTP requests",
+			Buckets: prometheus.DefBuckets,
+		},
+		[]string{"method", "path", "status"},
+	)
 )
