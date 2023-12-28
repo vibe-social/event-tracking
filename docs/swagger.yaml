@@ -1,5 +1,5 @@
 definitions:
-  controllers.CreateEventRequest:
+  models.CreateEventRequest:
     properties:
       content:
         type: string
@@ -12,7 +12,7 @@ definitions:
     - type
     - user_id
     type: object
-  controllers.UpdateEventRequest:
+  models.UpdateEventRequest:
     properties:
       content:
         type: string
@@ -52,7 +52,7 @@ paths:
         name: event
         required: true
         schema:
-          $ref: '#/definitions/controllers.CreateEventRequest'
+          $ref: '#/definitions/models.CreateEventRequest'
       produces:
       - application/json
       responses: {}
@@ -106,7 +106,7 @@ paths:
         name: event
         required: true
         schema:
-          $ref: '#/definitions/controllers.UpdateEventRequest'
+          $ref: '#/definitions/models.UpdateEventRequest'
       produces:
       - application/json
       responses: {}
@@ -123,6 +123,36 @@ paths:
       summary: Health check
       tags:
       - health
+  /health/cpu:
+    get:
+      description: cpu health check
+      operationId: health-check-cpu
+      produces:
+      - application/json
+      responses: {}
+      summary: CPU health check
+      tags:
+      - health
+  /health/database:
+    get:
+      description: database health check
+      operationId: health-check-database
+      produces:
+      - application/json
+      responses: {}
+      summary: Database health check
+      tags:
+      - health
+  /health/disk:
+    get:
+      description: disk health check
+      operationId: health-check-disk
+      produces:
+      - application/json
+      responses: {}
+      summary: Disk health check
+      tags:
+      - health
   /health/general:
     get:
       description: general health check
@@ -131,6 +161,46 @@ paths:
       - application/json
       responses: {}
       summary: General health check
+      tags:
+      - health
+  /health/goroutine:
+    get:
+      description: goroutine health check
+      operationId: health-check-goroutine
+      produces:
+      - application/json
+      responses: {}
+      summary: Goroutine health check
+      tags:
+      - health
+  /health/kafka:
+    get:
+      description: kafka health check
+      operationId: health-check-kafka
+      produces:
+      - application/json
+      responses: {}
+      summary: Kafka health check
+      tags:
+      - health
+  /health/liveness:
+    get:
+      description: liveness health check
+      operationId: health-check-liveness
+      produces:
+      - application/json
+      responses: {}
+      summary: Liveness health check
+      tags:
+      - health
+  /health/readiness:
+    get:
+      description: readiness health check
+      operationId: health-check-readiness
+      produces:
+      - application/json
+      responses: {}
+      summary: Readiness health check
       tags:
       - health
   /metrics:

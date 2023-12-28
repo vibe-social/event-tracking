@@ -52,7 +52,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.CreateEventRequest"
+                            "$ref": "#/definitions/models.CreateEventRequest"
                         }
                     }
                 ],
@@ -129,7 +129,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.UpdateEventRequest"
+                            "$ref": "#/definitions/models.UpdateEventRequest"
                         }
                     }
                 ],
@@ -150,6 +150,48 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/health/cpu": {
+            "get": {
+                "description": "cpu health check",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "CPU health check",
+                "operationId": "health-check-cpu",
+                "responses": {}
+            }
+        },
+        "/health/database": {
+            "get": {
+                "description": "database health check",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Database health check",
+                "operationId": "health-check-database",
+                "responses": {}
+            }
+        },
+        "/health/disk": {
+            "get": {
+                "description": "disk health check",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Disk health check",
+                "operationId": "health-check-disk",
+                "responses": {}
+            }
+        },
         "/health/general": {
             "get": {
                 "description": "general health check",
@@ -161,6 +203,62 @@ const docTemplate = `{
                 ],
                 "summary": "General health check",
                 "operationId": "health-check-general",
+                "responses": {}
+            }
+        },
+        "/health/goroutine": {
+            "get": {
+                "description": "goroutine health check",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Goroutine health check",
+                "operationId": "health-check-goroutine",
+                "responses": {}
+            }
+        },
+        "/health/kafka": {
+            "get": {
+                "description": "kafka health check",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Kafka health check",
+                "operationId": "health-check-kafka",
+                "responses": {}
+            }
+        },
+        "/health/liveness": {
+            "get": {
+                "description": "liveness health check",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Liveness health check",
+                "operationId": "health-check-liveness",
+                "responses": {}
+            }
+        },
+        "/health/readiness": {
+            "get": {
+                "description": "readiness health check",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Readiness health check",
+                "operationId": "health-check-readiness",
                 "responses": {}
             }
         },
@@ -180,7 +278,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controllers.CreateEventRequest": {
+        "models.CreateEventRequest": {
             "type": "object",
             "required": [
                 "content",
@@ -199,7 +297,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.UpdateEventRequest": {
+        "models.UpdateEventRequest": {
             "type": "object",
             "properties": {
                 "content": {

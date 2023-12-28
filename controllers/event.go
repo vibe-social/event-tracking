@@ -49,7 +49,7 @@ func FindEvent(context *gin.Context) {
 // @Description create event
 // @Accept  json
 // @Produce  json
-// @Param event body CreateEventRequest true "Event"
+// @Param event body models.CreateEventRequest true "Event"
 // @Router /events [post]
 func CreateEvent(context *gin.Context) {
 	var request models.CreateEventRequest
@@ -71,7 +71,7 @@ func CreateEvent(context *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path int true "Event ID"
-// @Param event body UpdateEventRequest true "Event"
+// @Param event body models.UpdateEventRequest true "Event"
 // @Router /events/{id} [patch]
 func UpdateEvent(context *gin.Context) {
 	var event models.Event
