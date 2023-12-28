@@ -132,6 +132,11 @@ type Server struct{}
 // @Summary Create event
 // @Description create event
 func (s *Server) CreateEvent(context context.Context, event *proto.Event) (*proto.Event, error) {
+	kafkaRuntime, err := kafka.EH.GetRuntimeInformation(context)
+	if err != nil {
+		return nil, err
+	}
+
 	// Start measuring the time
 	timer := time.Now()
 
@@ -139,7 +144,7 @@ func (s *Server) CreateEvent(context context.Context, event *proto.Event) (*prot
 	eventBytes := []byte(event.String())
 
 	// Send the event to Azure Event Hub
-	kafka.EH.Send(context, eventhub.NewEvent(eventBytes))
+	err = kafka.EH.Send(context, eventhub.NewEvent(eventBytes))
 
 	// Stop measuring the time and calculate the duration
 	duration := time.Since(timer).Seconds()
@@ -149,6 +154,18 @@ func (s *Server) CreateEvent(context context.Context, event *proto.Event) (*prot
 
 	// Trigger the event processing duration metric
 	utils.TriggerEventProcessingDuration(models.EventType(event.Type), duration)
+
+	if err != nil {
+		// Trigger the Kafka outgoing errors metric
+		utils.TriggerKafkaOutgoingErrors(kafkaRuntime.Path)
+		return nil, err
+	} else {
+		// Trigger the Kafka outgoing requests metric
+		utils.TriggerKafkaOutgoingRequests(kafkaRuntime.Path)
+
+		// Trigger the Kafka outgoing bytes metric
+		utils.TriggerKafkaOutgoingBytes(kafkaRuntime.Path, float64(len(eventBytes)))
+	}
 
 	return event, nil
 }

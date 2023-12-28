@@ -79,3 +79,18 @@ func TriggerDatabaseErrors(query string) {
 	// Increment database errors
 	metrics.DatabaseErrors.WithLabelValues(query).Inc()
 }
+
+func TriggerKafkaOutgoingRequests(topic string) {
+	// Increment Kafka outgoing requests
+	metrics.KafkaOutgoingRequests.WithLabelValues(topic).Inc()
+}
+
+func TriggerKafkaOutgoingBytes(topic string, bytes float64) {
+	// Set Kafka outgoing bytes
+	metrics.KafkaOutgoingBytes.WithLabelValues(topic).Set(bytes)
+}
+
+func TriggerKafkaOutgoingErrors(topic string) {
+	// Increment Kafka outgoing errors
+	metrics.KafkaOutgoingErrors.WithLabelValues(topic).Inc()
+}

@@ -35,6 +35,9 @@ func init() {
 	prometheus.MustRegister(metrics.DatabaseConnectionPool)
 	prometheus.MustRegister(metrics.DatabaseQueryDuration)
 	prometheus.MustRegister(metrics.DatabaseErrors)
+	prometheus.MustRegister(metrics.KafkaOutgoingRequests)
+	prometheus.MustRegister(metrics.KafkaOutgoingBytes)
+	prometheus.MustRegister(metrics.KafkaOutgoingErrors)
 
 	// Register custom metrics with custom registry
 	customRegistry.MustRegister(metrics.TotalHttpRequests)
@@ -52,6 +55,9 @@ func init() {
 	customRegistry.MustRegister(metrics.DatabaseConnectionPool)
 	customRegistry.MustRegister(metrics.DatabaseQueryDuration)
 	customRegistry.MustRegister(metrics.DatabaseErrors)
+	customRegistry.MustRegister(metrics.KafkaOutgoingRequests)
+	customRegistry.MustRegister(metrics.KafkaOutgoingBytes)
+	customRegistry.MustRegister(metrics.KafkaOutgoingErrors)
 }
 
 func PrometheusMiddleware() gin.HandlerFunc {

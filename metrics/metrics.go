@@ -134,4 +134,31 @@ var (
 		},
 		[]string{"error"},
 	)
+
+	// Kafka outgoing requests
+	KafkaOutgoingRequests = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "kafka_outgoing_requests",
+			Help: "Kafka outgoing requests",
+		},
+		[]string{"topic"},
+	)
+
+	// Kafka outgoing bytes
+	KafkaOutgoingBytes = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "kafka_outgoing_bytes",
+			Help: "Kafka outgoing bytes",
+		},
+		[]string{"topic"},
+	)
+
+	// Kafka outgoing errors
+	KafkaOutgoingErrors = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "kafka_outgoing_errors",
+			Help: "Kafka outgoing errors",
+		},
+		[]string{"topic"},
+	)
 )
