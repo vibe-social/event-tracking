@@ -2,10 +2,21 @@ package models
 
 import "time"
 
+type EventType string
+
+const (
+	EventTypeUnknown  EventType = "unknown"
+	EventTypeLogin    EventType = "login"
+	EventTypeLogout   EventType = "logout"
+	EventTypeRegister EventType = "register"
+	EventTypePurchase EventType = "purchase"
+	EventTypeView     EventType = "view"
+)
+
 type Event struct {
 	Id        string    `json:"id" gorm:"primaryKey;autoIncrement"`
 	Timestamp time.Time `json:"timestamp" gorm:"autoCreateTime"`
-	Type      string    `json:"type" gorm:"not null"`
+	Type      EventType `json:"type" gorm:"not null"`
 	Content   string    `json:"content" gorm:"not null"`
 	UserId    string    `json:"user_id" gorm:"not null"`
 }

@@ -58,7 +58,7 @@ func CreateEvent(context *gin.Context) {
 		return
 	}
 
-	event := models.Event{Type: request.Type, UserId: request.UserId, Content: request.Content}
+	event := models.Event{Type: models.EventType(request.Type), UserId: request.UserId, Content: request.Content}
 	database.DB.Create(&event)
 
 	context.JSON(http.StatusOK, gin.H{"data": event})
