@@ -69,6 +69,8 @@ func main() {
 	httpServer.GET("/health/goroutine", controllers.CheckHealthGoroutine)
 	httpServer.GET("/health/database", controllers.CheckHealthDatabase)
 	httpServer.GET("/health/kafka", controllers.CheckHealthKafka)
+	httpServer.GET("/health/live", controllers.CheckHealthLiveness)
+	httpServer.GET("/health/ready", controllers.CheckHealthReadiness)
 
 	// Specify the HTTP events endpoints and the controllers
 	httpServer.GET("/events", controllers.FindEvents)

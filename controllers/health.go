@@ -194,3 +194,23 @@ func CheckHealthKafka(context *gin.Context) {
 		Components: map[string]models.HealthComponent{"kafka": kafkaHealthComponent},
 	})
 }
+
+// @Tags health
+// @ID health-check-liveness
+// @Summary Liveness health check
+// @Description liveness health check
+// @Produce  json
+// @Router /health/liveness [get]
+func CheckHealthLiveness(context *gin.Context) {
+	CheckHealthGeneral(context)
+}
+
+// @Tags health
+// @ID health-check-readiness
+// @Summary Readiness health check
+// @Description readiness health check
+// @Produce  json
+// @Router /health/readiness [get]
+func CheckHealthReadiness(context *gin.Context) {
+	CheckHealth(context)
+}
