@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"event-tracking/database"
 	"event-tracking/metrics"
 	_ "event-tracking/metrics"
 	"event-tracking/utils"
@@ -15,14 +16,11 @@ import (
 // Define Prometheus custom registry
 var (
 	customRegistry = prometheus.NewRegistry()
-	memoryStats    = new(runtime.MemStats)
 )
 
 func init() {
 	// Register custom metrics with Prometheus
 	prometheus.MustRegister(metrics.TotalHttpRequests)
-	prometheus.MustRegister(metrics.TotalEventProcessed)
-	prometheus.MustRegister(metrics.EventProcessingDuration)
 	prometheus.MustRegister(metrics.Total2xxHttpRequests)
 	prometheus.MustRegister(metrics.Total3xxHttpRequests)
 	prometheus.MustRegister(metrics.Total4xxHttpRequests)
@@ -32,11 +30,14 @@ func init() {
 	prometheus.MustRegister(metrics.CPUUsagePercentage)
 	prometheus.MustRegister(metrics.TotalGoroutines)
 	prometheus.MustRegister(metrics.TotalThreads)
+	prometheus.MustRegister(metrics.TotalEventProcessed)
+	prometheus.MustRegister(metrics.EventProcessingDuration)
+	prometheus.MustRegister(metrics.DatabaseConnectionPool)
+	prometheus.MustRegister(metrics.DatabaseQueryDuration)
+	prometheus.MustRegister(metrics.DatabaseErrors)
 
 	// Register custom metrics with custom registry
 	customRegistry.MustRegister(metrics.TotalHttpRequests)
-	customRegistry.MustRegister(metrics.TotalEventProcessed)
-	customRegistry.MustRegister(metrics.EventProcessingDuration)
 	customRegistry.MustRegister(metrics.Total2xxHttpRequests)
 	customRegistry.MustRegister(metrics.Total3xxHttpRequests)
 	customRegistry.MustRegister(metrics.Total4xxHttpRequests)
@@ -46,11 +47,20 @@ func init() {
 	customRegistry.MustRegister(metrics.CPUUsagePercentage)
 	customRegistry.MustRegister(metrics.TotalGoroutines)
 	customRegistry.MustRegister(metrics.TotalThreads)
+	customRegistry.MustRegister(metrics.TotalEventProcessed)
+	customRegistry.MustRegister(metrics.EventProcessingDuration)
+	customRegistry.MustRegister(metrics.DatabaseConnectionPool)
+	customRegistry.MustRegister(metrics.DatabaseQueryDuration)
+	customRegistry.MustRegister(metrics.DatabaseErrors)
 }
 
 func PrometheusMiddleware() gin.HandlerFunc {
 	return func(context *gin.Context) {
+		memoryStats := new(runtime.MemStats)
 		runtime.ReadMemStats(memoryStats)
+
+		db, _ := database.DB.DB()
+		databaseStats := db.Stats()
 
 		// Trigger HTTP requests total
 		utils.TriggerHttpRequestsTotal(context.Request.Method, context.Request.URL.Path, strconv.Itoa(context.Writer.Status()))
@@ -89,6 +99,9 @@ func PrometheusMiddleware() gin.HandlerFunc {
 
 		// Trigger total threads
 		utils.TriggerTotalThreads(float64(runtime.NumCPU()))
+
+		// Trigger database connection pool
+		utils.TriggerDatabaseConnectionPool(float64(databaseStats.OpenConnections))
 
 		// Continue with the next middleware or route handler
 		context.Next()

@@ -64,3 +64,18 @@ func TriggerEventProcessingDuration(eventType models.EventType, duration float64
 	// Observe event processing duration
 	metrics.EventProcessingDuration.WithLabelValues(string(eventType)).Observe(duration)
 }
+
+func TriggerDatabaseConnectionPool(pool float64) {
+	// Set database connection pool
+	metrics.DatabaseConnectionPool.Set(pool)
+}
+
+func TriggerDatabaseQueryDuration(query_type string, query string, duration float64) {
+	// Observe database query duration
+	metrics.DatabaseQueryDuration.WithLabelValues(query_type, query).Observe(duration)
+}
+
+func TriggerDatabaseErrors(query string) {
+	// Increment database errors
+	metrics.DatabaseErrors.WithLabelValues(query).Inc()
+}

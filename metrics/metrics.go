@@ -89,7 +89,7 @@ var (
 		},
 	)
 
-	// Total Event Processed
+	// Total event processed
 	TotalEventProcessed = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "total_event_processed",
@@ -98,7 +98,7 @@ var (
 		[]string{"event_type"},
 	)
 
-	// Event Processing Duration
+	// Event processing duration
 	EventProcessingDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Name:    "event_processing_duration",
@@ -106,5 +106,32 @@ var (
 			Buckets: prometheus.DefBuckets,
 		},
 		[]string{"event_type"},
+	)
+
+	// Database connection pool
+	DatabaseConnectionPool = prometheus.NewGauge(
+		prometheus.GaugeOpts{
+			Name: "database_connection_pool",
+			Help: "Database connection pool",
+		},
+	)
+
+	// Database query duration
+	DatabaseQueryDuration = prometheus.NewHistogramVec(
+		prometheus.HistogramOpts{
+			Name:    "database_query_duration",
+			Help:    "Database query duration",
+			Buckets: prometheus.DefBuckets,
+		},
+		[]string{"type", "query"},
+	)
+
+	// Database errors
+	DatabaseErrors = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "database_errors",
+			Help: "Database errors",
+		},
+		[]string{"error"},
 	)
 )
