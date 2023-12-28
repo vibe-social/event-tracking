@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"time"
 
@@ -132,6 +133,10 @@ type Server struct{}
 // @Summary Create event
 // @Description create event
 func (s *Server) CreateEvent(context context.Context, event *proto.Event) (*proto.Event, error) {
+	// Log the incoming event
+	log.Printf("[gRPC] %s Received event: %v", time.Now().Format(time.RFC3339), event)
+
+	// Get the Kafka runtime information
 	kafkaRuntime, err := kafka.EH.GetRuntimeInformation(context)
 	if err != nil {
 		return nil, err

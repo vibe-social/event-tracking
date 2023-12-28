@@ -3,7 +3,6 @@ package controllers
 import (
 	"event-tracking/database"
 	"event-tracking/metrics"
-	_ "event-tracking/metrics"
 	"event-tracking/utils"
 	"runtime"
 	"strconv"
