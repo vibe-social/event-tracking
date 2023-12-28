@@ -13,18 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CreateEventRequest struct {
-	Type    string `json:"type" binding:"required"`
-	UserId  string `json:"user_id" binding:"required"`
-	Content string `json:"content" binding:"required"`
-}
-
-type UpdateEventRequest struct {
-	Type    string `json:"type"`
-	UserId  string `json:"user_id"`
-	Content string `json:"content"`
-}
-
 // @Tags events
 // @ID get-events
 // @Summary List events
@@ -64,7 +52,7 @@ func FindEvent(context *gin.Context) {
 // @Param event body CreateEventRequest true "Event"
 // @Router /events [post]
 func CreateEvent(context *gin.Context) {
-	var request CreateEventRequest
+	var request models.CreateEventRequest
 	if err := context.ShouldBindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -92,7 +80,7 @@ func UpdateEvent(context *gin.Context) {
 		return
 	}
 
-	var request UpdateEventRequest
+	var request models.UpdateEventRequest
 	if err := context.ShouldBindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
