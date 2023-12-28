@@ -123,6 +123,16 @@ paths:
       summary: Health check
       tags:
       - health
+  /health/general:
+    get:
+      description: general health check
+      operationId: health-check-general
+      produces:
+      - application/json
+      responses: {}
+      summary: General health check
+      tags:
+      - health
   /metrics:
     get:
       description: Prometheus metrics

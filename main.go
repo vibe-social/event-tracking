@@ -61,8 +61,14 @@ func main() {
 	// Prometheus metrics endpoint
 	httpServer.GET("/metrics", controllers.PrometheusHandler())
 
-	// Health check endpoint
+	// Specify the HTTP health endpoints and the controllers
 	httpServer.GET("/health", controllers.CheckHealth)
+	httpServer.GET("/health/general", controllers.CheckHealthGeneral)
+	httpServer.GET("/health/disk", controllers.CheckHealthDisk)
+	httpServer.GET("/health/cpu", controllers.CheckHealthCPU)
+	httpServer.GET("/health/goroutine", controllers.CheckHealthGoroutine)
+	httpServer.GET("/health/database", controllers.CheckHealthDatabase)
+	httpServer.GET("/health/kafka", controllers.CheckHealthKafka)
 
 	// Specify the HTTP events endpoints and the controllers
 	httpServer.GET("/events", controllers.FindEvents)

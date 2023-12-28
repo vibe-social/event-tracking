@@ -150,6 +150,20 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/health/general": {
+            "get": {
+                "description": "general health check",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "General health check",
+                "operationId": "health-check-general",
+                "responses": {}
+            }
+        },
         "/metrics": {
             "get": {
                 "description": "Prometheus metrics",
