@@ -32,7 +32,7 @@ func main() {
 	configs.LoadConfig()
 
 	// Set the server mode
-	serverMode := viper.GetString("SERVER_MODE")
+	serverMode := viper.GetString("EVENT_TRACKING_SERVER_MODE")
 	if serverMode == "release" {
 		gin.SetMode(gin.ReleaseMode)
 	} else if serverMode == "test" {
@@ -84,7 +84,7 @@ func main() {
 	waitGroup.Add(1)
 	go func() {
 		defer waitGroup.Done()
-		httpAddress := fmt.Sprintf(":%d", viper.GetInt("HTTP_SERVER_PORT"))
+		httpAddress := fmt.Sprintf(":%d", viper.GetInt("EVENT_TRACKING_HTTP_SERVER_PORT"))
 		log.Printf("HTTP server listening on port %s", httpAddress)
 		if err := httpServer.Run(httpAddress); err != nil {
 			log.Fatal(err)
@@ -95,7 +95,7 @@ func main() {
 	waitGroup.Add(1)
 	go func() {
 		defer waitGroup.Done()
-		grpcAddress := fmt.Sprintf(":%d", viper.GetInt("GRPC_SERVER_PORT"))
+		grpcAddress := fmt.Sprintf(":%d", viper.GetInt("EVENT_TRACKING_GRPC_SERVER_PORT"))
 		log.Printf("gRPC server listening on port %s", grpcAddress)
 		grpcListener, err := net.Listen("tcp", grpcAddress)
 		if err != nil {

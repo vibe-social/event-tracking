@@ -9,7 +9,7 @@ import (
 var DB *gorm.DB
 
 func ConnectDatabase() {
-	dsn := viper.GetString("DATABASE_DSN")
+	dsn := viper.GetString("SUPABASE_DSN")
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("Failed to connect to database!")
