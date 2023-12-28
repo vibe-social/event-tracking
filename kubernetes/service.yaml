@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: event-tracking-service
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
     app: event-tracking
   ports:
