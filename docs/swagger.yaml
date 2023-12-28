@@ -31,6 +31,16 @@ info:
   title: Event Tracking API Documentation
   version: "1.0"
 paths:
+  /custom-metrics:
+    get:
+      description: Custom Prometheus metrics
+      operationId: custom-prometheus-metrics
+      produces:
+      - application/json
+      responses: {}
+      summary: Custom Prometheus metrics
+      tags:
+      - metrics
   /events:
     get:
       description: get events

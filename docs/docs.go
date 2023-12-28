@@ -19,6 +19,20 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/custom-metrics": {
+            "get": {
+                "description": "Custom Prometheus metrics",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "Custom Prometheus metrics",
+                "operationId": "custom-prometheus-metrics",
+                "responses": {}
+            }
+        },
         "/events": {
             "get": {
                 "description": "get events",
