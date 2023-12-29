@@ -1,13 +1,13 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: event-tracking-autoscaler
+  name: event-tracking
   namespace: vibe-social
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: event-tracking-deployment
+    name: event-tracking
   minReplicas: 1
   maxReplicas: 5
   metrics:
