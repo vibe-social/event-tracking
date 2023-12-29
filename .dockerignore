@@ -3,6 +3,7 @@
 .git/
 
 # Ignore config files
+.env
 .example.env
 
 # Ignore build files

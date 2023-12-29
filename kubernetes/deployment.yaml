@@ -14,11 +14,37 @@ spec:
     spec:
       containers:
         - name: event-tracking
-          image: vibesocial/event-tracking:latest
+          image: vibesocial/event-tracking
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
             - containerPort: 8081
+          env:
+            - name: EVENT_TRACKING_SERVER_MODE
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: EVENT_TRACKING_SERVER_MODE
+            - name: EVENT_TRACKING_HTTP_SERVER_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: EVENT_TRACKING_HTTP_SERVER_PORT
+            - name: EVENT_TRACKING_GRPC_SERVER_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: EVENT_TRACKING_GRPC_SERVER_PORT
+            - name: EVENT_HUB_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: EVENT_HUB_CONNECTION_STRING
+            - name: SUPABASE_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: SUPABASE_DSN
           resources:
             limits:
               cpu: "1.0"
