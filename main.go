@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 	"sync"
 
 	_ "event-tracking/docs"
@@ -43,7 +44,7 @@ func main() {
 	}
 
 	// Create the HTTP server
-	httpServer := gin.Default()
+	httpRouter := gin.Default()
 
 	// Create the gRPC server
 	server := controllers.Server{}
@@ -56,33 +57,33 @@ func main() {
 	kafka.ConnectEventHub()
 
 	// Apply the Prometheus middleware
-	httpServer.Use(middleware.PrometheusMiddleware())
+	httpRouter.Use(middleware.PrometheusMiddleware())
 
 	// Swagger documentation endpoint
-	httpServer.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	httpServer.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	httpRouter.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	httpRouter.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Prometheus metrics endpoints
-	httpServer.GET("/metrics", controllers.PrometheusHandler())
-	httpServer.GET("/custom-metrics", controllers.CustomPrometheusHandler())
+	httpRouter.GET("/metrics", controllers.PrometheusHandler())
+	httpRouter.GET("/custom-metrics", controllers.CustomPrometheusHandler())
 
 	// Specify the HTTP health endpoints and the controllers
-	httpServer.GET("/health", controllers.CheckHealth)
-	httpServer.GET("/health/general", controllers.CheckHealthGeneral)
-	httpServer.GET("/health/disk", controllers.CheckHealthDisk)
-	httpServer.GET("/health/cpu", controllers.CheckHealthCPU)
-	httpServer.GET("/health/goroutine", controllers.CheckHealthGoroutine)
-	httpServer.GET("/health/database", controllers.CheckHealthDatabase)
-	httpServer.GET("/health/kafka", controllers.CheckHealthKafka)
-	httpServer.GET("/health/live", controllers.CheckHealthLiveness)
-	httpServer.GET("/health/ready", controllers.CheckHealthReadiness)
+	httpRouter.GET("/health", controllers.CheckHealth)
+	httpRouter.GET("/health/general", controllers.CheckHealthGeneral)
+	httpRouter.GET("/health/disk", controllers.CheckHealthDisk)
+	httpRouter.GET("/health/cpu", controllers.CheckHealthCPU)
+	httpRouter.GET("/health/goroutine", controllers.CheckHealthGoroutine)
+	httpRouter.GET("/health/database", controllers.CheckHealthDatabase)
+	httpRouter.GET("/health/kafka", controllers.CheckHealthKafka)
+	httpRouter.GET("/health/live", controllers.CheckHealthLiveness)
+	httpRouter.GET("/health/ready", controllers.CheckHealthReadiness)
 
 	// Specify the HTTP events endpoints and the controllers
-	httpServer.GET("/events", controllers.FindEvents)
-	httpServer.GET("/events/:id", controllers.FindEvent)
-	httpServer.POST("/events", controllers.CreateEvent)
-	httpServer.PATCH("/events/:id", controllers.UpdateEvent)
-	httpServer.DELETE("/events/:id", controllers.DeleteEvent)
+	httpRouter.GET("/events", controllers.FindEvents)
+	httpRouter.GET("/events/:id", controllers.FindEvent)
+	httpRouter.POST("/events", controllers.CreateEvent)
+	httpRouter.PATCH("/events/:id", controllers.UpdateEvent)
+	httpRouter.DELETE("/events/:id", controllers.DeleteEvent)
 
 	// Specify the gRPC events endpoints and the controllers
 	proto.RegisterEventServiceServer(grpcServer, &server)
@@ -98,8 +99,14 @@ func main() {
 	go func() {
 		defer waitGroup.Done()
 		httpAddress := fmt.Sprintf(":%d", viper.GetInt("EVENT_TRACKING_HTTP_SERVER_PORT"))
+		httpServer := &http.Server{
+			Addr:         httpAddress,
+			Handler:      httpRouter,
+			ReadTimeout:  viper.GetDuration("EVENT_TRACKING_HTTP_SERVER_TIMEOUT"),
+			WriteTimeout: viper.GetDuration("EVENT_TRACKING_HTTP_SERVER_TIMEOUT"),
+		}
 		log.Printf("HTTP server listening on port %s", httpAddress)
-		if err := httpServer.Run(httpAddress); err != nil {
+		if err := httpServer.ListenAndServe(); err != nil {
 			log.Fatal(err)
 		}
 	}()
