@@ -13,7 +13,9 @@ import (
 	"event-tracking/utils"
 
 	eventhub "github.com/Azure/azure-event-hubs-go"
+	"github.com/avast/retry-go"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 )
 
 // @Tags events
@@ -132,12 +134,16 @@ type Server struct{}
 // @ID create-event-grpc
 // @Summary Create event
 // @Description create event
-func (s *Server) CreateEvent(context context.Context, event *proto.Event) (*proto.Event, error) {
+func (s *Server) CreateEvent(ctx context.Context, event *proto.Event) (*proto.Event, error) {
 	// Log the incoming event
 	log.Printf("[gRPC] %s Received event: %v", time.Now().Format(time.RFC3339), event)
 
+	// Set the timeout
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), viper.GetDuration("EVENT_TRACKING_KAFKA_TIMEOUT"))
+	defer cancel()
+
 	// Get the Kafka runtime information
-	kafkaRuntime, err := kafka.EH.GetRuntimeInformation(context)
+	kafkaRuntime, err := kafka.EH.GetRuntimeInformation(ctxTimeout)
 	if err != nil {
 		return nil, err
 	}
@@ -148,8 +154,18 @@ func (s *Server) CreateEvent(context context.Context, event *proto.Event) (*prot
 	// Convert event to byte[]
 	eventBytes := []byte(event.String())
 
-	// Send the event to Azure Event Hub
-	err = kafka.EH.Send(context, eventhub.NewEvent(eventBytes))
+	// Define the retry logic
+	err = retry.Do(
+		func() error {
+			// Send the event to Azure Event Hub
+			return kafka.EH.Send(ctxTimeout, eventhub.NewEvent(eventBytes))
+		},
+		retry.Attempts(3),
+		retry.Delay(1*time.Second),
+		retry.OnRetry(func(n uint, err error) {
+			log.Printf("[gRPC] %s Retry #%d: %s", time.Now().Format(time.RFC3339), n, err)
+		}),
+	)
 
 	// Stop measuring the time and calculate the duration
 	duration := time.Since(timer).Seconds()
