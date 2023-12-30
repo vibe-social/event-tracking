@@ -5,6 +5,7 @@ import (
 	"event-tracking/controllers"
 	"event-tracking/database"
 	"event-tracking/kafka"
+	"event-tracking/middleware"
 	"event-tracking/proto"
 	"fmt"
 	"log"
@@ -55,7 +56,7 @@ func main() {
 	kafka.ConnectEventHub()
 
 	// Apply the Prometheus middleware
-	httpServer.Use(controllers.PrometheusMiddleware())
+	httpServer.Use(middleware.PrometheusMiddleware())
 
 	// Swagger documentation endpoint
 	httpServer.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
