@@ -56,6 +56,9 @@ func main() {
 	// Connect to Azure Event Hub
 	kafka.ConnectEventHub()
 
+	// Apply the retry middleware
+	httpRouter.Use(middleware.RetryMiddleware())
+
 	// Apply the Prometheus middleware
 	httpRouter.Use(middleware.PrometheusMiddleware())
 
