@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"event-tracking/configs"
 	"event-tracking/controllers"
 	"event-tracking/database"
@@ -12,6 +13,7 @@ import (
 	"net"
 	"net/http"
 	"sync"
+	"time"
 
 	_ "event-tracking/docs"
 
@@ -100,6 +102,9 @@ func main() {
 	// Create a WaitGroup and add a count of two, one for each goroutine
 	var waitGroup sync.WaitGroup
 
+	// Get the context
+	ctx := context.Background()
+
 	// Run the HTTP server in a separate goroutine
 	waitGroup.Add(1)
 	go func() {
@@ -112,8 +117,22 @@ func main() {
 			WriteTimeout: viper.GetDuration("EVENT_TRACKING_HTTP_SERVER_TIMEOUT"),
 		}
 		log.Printf("HTTP server listening on port %s", httpAddress)
-		if err := httpServer.ListenAndServe(); err != nil {
-			log.Fatal(err)
+
+		go func() {
+			if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+				log.Fatal(err)
+			}
+		}()
+
+		// Wait for interrupt signal to initiate graceful shutdown
+		<-ctx.Done()
+
+		// Create a context with a timeout to allow existing requests to finish
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		if err := httpServer.Shutdown(shutdownCtx); err != nil {
+			log.Printf("HTTP server shutdown error: %v", err)
 		}
 	}()
 
