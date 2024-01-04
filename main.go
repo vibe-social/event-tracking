@@ -59,6 +59,9 @@ func main() {
 	// Apply the retry middleware
 	httpRouter.Use(middleware.RetryMiddleware())
 
+	// Apply the circuit breaker middleware
+	httpRouter.Use(middleware.CircuitBreakerMiddleware())
+
 	// Apply the Prometheus middleware
 	httpRouter.Use(middleware.PrometheusMiddleware())
 
