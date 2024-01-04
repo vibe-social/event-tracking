@@ -73,7 +73,7 @@ func main() {
 
 	// Prometheus metrics endpoints
 	httpRouter.GET("/metrics", controllers.PrometheusHandler())
-	httpRouter.GET("/custom-metrics", controllers.CustomPrometheusHandler())
+	httpRouter.GET("/metrics/custom", controllers.CustomPrometheusHandler())
 
 	// Specify the HTTP health endpoints and the controllers
 	httpRouter.GET("/health", controllers.CheckHealth)

@@ -76,7 +76,7 @@ var (
 	// Total goroutines
 	TotalGoroutines = prometheus.NewGauge(
 		prometheus.GaugeOpts{
-			Name: "total_goroutines",
+			Name: "goroutines_total",
 			Help: "Total number of goroutines",
 		},
 	)
@@ -84,7 +84,7 @@ var (
 	// Total threads
 	TotalThreads = prometheus.NewGauge(
 		prometheus.GaugeOpts{
-			Name: "total_threads",
+			Name: "threads_total",
 			Help: "Total number of threads",
 		},
 	)
@@ -92,7 +92,7 @@ var (
 	// Total event processed
 	TotalEventProcessed = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "total_event_processed",
+			Name: "event_processed_total",
 			Help: "Total number of events processed",
 		},
 		[]string{"event_type"},
@@ -165,7 +165,7 @@ var (
 	// Latency of HTTP requests
 	Latency = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
-			Name:    "http_request_duration_seconds",
+			Name:    "latency",
 			Help:    "Latency of HTTP requests",
 			Buckets: prometheus.DefBuckets,
 		},
