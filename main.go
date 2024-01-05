@@ -68,7 +68,6 @@ func main() {
 	httpRouter.Use(middleware.PrometheusMiddleware())
 
 	// Swagger documentation endpoint
-	httpRouter.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	httpRouter.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Prometheus metrics endpoints
