@@ -139,7 +139,7 @@ func (s *Server) CreateEvent(ctx context.Context, event *proto.Event) (*proto.Ev
 	log.Printf("[gRPC] %s Received event: %v", time.Now().Format(time.RFC3339), event)
 
 	// Set the timeout
-	ctxTimeout, cancel := context.WithTimeout(context.Background(), viper.GetDuration("EVENT_TRACKING_KAFKA_TIMEOUT"))
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), viper.GetDuration("EVENT_TRACKING_GRPC_SERVER_TIMEOUT"))
 	defer cancel()
 
 	// Get the Kafka runtime information
