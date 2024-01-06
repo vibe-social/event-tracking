@@ -68,5 +68,5 @@ jobs:
             ./kubernetes/deployment.yaml
             ./kubernetes/service.yaml
             ./kubernetes/autoscaler.yaml
-            ./kubernetes/pod-distribution.yaml
+            ./kubernetes/poddistribution.yaml
           images: ${{ env.CONTAINER_NAME }}:${{ github.sha }}
