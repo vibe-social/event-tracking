@@ -11,7 +11,7 @@
         "version": "1.0"
     },
     "paths": {
-        "/custom-metrics": {
+        "/event-tracking/custom-metrics": {
             "get": {
                 "description": "Custom Prometheus metrics",
                 "produces": [
@@ -25,7 +25,7 @@
                 "responses": {}
             }
         },
-        "/events": {
+        "/event-tracking/events": {
             "get": {
                 "description": "get events",
                 "produces": [
@@ -65,7 +65,7 @@
                 "responses": {}
             }
         },
-        "/events/{id}": {
+        "/event-tracking/events/{id}": {
             "get": {
                 "description": "get event",
                 "produces": [
@@ -142,7 +142,7 @@
                 "responses": {}
             }
         },
-        "/health": {
+        "/event-tracking/health": {
             "get": {
                 "description": "health check",
                 "produces": [
@@ -156,7 +156,7 @@
                 "responses": {}
             }
         },
-        "/health/cpu": {
+        "/event-tracking/health/cpu": {
             "get": {
                 "description": "cpu health check",
                 "produces": [
@@ -170,7 +170,7 @@
                 "responses": {}
             }
         },
-        "/health/database": {
+        "/event-tracking/health/database": {
             "get": {
                 "description": "database health check",
                 "produces": [
@@ -184,7 +184,7 @@
                 "responses": {}
             }
         },
-        "/health/disk": {
+        "/event-tracking/health/disk": {
             "get": {
                 "description": "disk health check",
                 "produces": [
@@ -198,7 +198,7 @@
                 "responses": {}
             }
         },
-        "/health/general": {
+        "/event-tracking/health/general": {
             "get": {
                 "description": "general health check",
                 "produces": [
@@ -212,7 +212,7 @@
                 "responses": {}
             }
         },
-        "/health/goroutine": {
+        "/event-tracking/health/goroutine": {
             "get": {
                 "description": "goroutine health check",
                 "produces": [
@@ -226,7 +226,7 @@
                 "responses": {}
             }
         },
-        "/health/kafka": {
+        "/event-tracking/health/kafka": {
             "get": {
                 "description": "kafka health check",
                 "produces": [
@@ -240,7 +240,7 @@
                 "responses": {}
             }
         },
-        "/health/liveness": {
+        "/event-tracking/health/liveness": {
             "get": {
                 "description": "liveness health check",
                 "produces": [
@@ -254,7 +254,7 @@
                 "responses": {}
             }
         },
-        "/health/readiness": {
+        "/event-tracking/health/readiness": {
             "get": {
                 "description": "readiness health check",
                 "produces": [
@@ -268,7 +268,7 @@
                 "responses": {}
             }
         },
-        "/metrics": {
+        "/event-tracking/metrics": {
             "get": {
                 "description": "Prometheus metrics",
                 "produces": [

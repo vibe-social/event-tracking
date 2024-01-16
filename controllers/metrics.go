@@ -57,12 +57,12 @@ func init() {
 	customRegistry.MustRegister(metrics.Latency)
 }
 
-// @Tags metrics
-// @ID prometheus-metrics
-// @Summary Prometheus metrics
-// @Description Prometheus metrics
-// @Produce  json
-// @Router /metrics [get]
+// @Tags			metrics
+// @ID				prometheus-metrics
+// @Summary		Prometheus metrics
+// @Description	Prometheus metrics
+// @Produce		json
+// @Router			/event-tracking/metrics [get]
 func PrometheusHandler() gin.HandlerFunc {
 	handler := promhttp.Handler()
 
@@ -71,12 +71,12 @@ func PrometheusHandler() gin.HandlerFunc {
 	}
 }
 
-// @Tags metrics
-// @ID custom-prometheus-metrics
-// @Summary Custom Prometheus metrics
-// @Description Custom Prometheus metrics
-// @Produce  json
-// @Router /custom-metrics [get]
+// @Tags			metrics
+// @ID				custom-prometheus-metrics
+// @Summary		Custom Prometheus metrics
+// @Description	Custom Prometheus metrics
+// @Produce		json
+// @Router			/event-tracking/custom-metrics [get]
 func CustomPrometheusHandler() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		promhttp.HandlerFor(customRegistry, promhttp.HandlerOpts{}).ServeHTTP(context.Writer, context.Request)

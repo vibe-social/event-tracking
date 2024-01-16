@@ -18,12 +18,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-// @Tags events
-// @ID get-events
-// @Summary List events
-// @Description get events
-// @Produce  json
-// @Router /events [get]
+// @Tags			events
+// @ID				get-events
+// @Summary		List events
+// @Description	get events
+// @Produce		json
+// @Router			/event-tracking/events [get]
 func FindEvents(context *gin.Context) {
 	var events []models.Event
 	database.DB.Find(&events)
@@ -31,13 +31,13 @@ func FindEvents(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": events})
 }
 
-// @Tags events
-// @ID get-event
-// @Summary Get event
-// @Description get event
-// @Produce  json
-// @Param id path int true "Event ID"
-// @Router /events/{id} [get]
+// @Tags			events
+// @ID				get-event
+// @Summary		Get event
+// @Description	get event
+// @Produce		json
+// @Param			id	path	int	true	"Event ID"
+// @Router			/event-tracking/events/{id} [get]
 func FindEvent(context *gin.Context) {
 	var event models.Event
 	if err := database.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
@@ -48,14 +48,14 @@ func FindEvent(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
 
-// @Tags events
-// @ID create-event
-// @Summary Create event
-// @Description create event
-// @Accept  json
-// @Produce  json
-// @Param event body models.CreateEventRequest true "Event"
-// @Router /events [post]
+// @Tags			events
+// @ID				create-event
+// @Summary		Create event
+// @Description	create event
+// @Accept			json
+// @Produce		json
+// @Param			event	body	models.CreateEventRequest	true	"Event"
+// @Router			/event-tracking/events [post]
 func CreateEvent(context *gin.Context) {
 	// Start measuring the time
 	timer := time.Now()
@@ -81,15 +81,15 @@ func CreateEvent(context *gin.Context) {
 	utils.TriggerEventProcessingDuration(models.EventType(event.Type), duration)
 }
 
-// @Tags events
-// @ID update-event
-// @Summary Update event
-// @Description update event
-// @Accept  json
-// @Produce  json
-// @Param id path int true "Event ID"
-// @Param event body models.UpdateEventRequest true "Event"
-// @Router /events/{id} [patch]
+// @Tags			events
+// @ID				update-event
+// @Summary		Update event
+// @Description	update event
+// @Accept			json
+// @Produce		json
+// @Param			id		path	int							true	"Event ID"
+// @Param			event	body	models.UpdateEventRequest	true	"Event"
+// @Router			/event-tracking/events/{id} [patch]
 func UpdateEvent(context *gin.Context) {
 	var event models.Event
 	if err := database.DB.Where("id = ?", context.Param("id")).First(&event).Error; err != nil {
@@ -108,13 +108,13 @@ func UpdateEvent(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": event})
 }
 
-// @Tags events
-// @ID delete-event
-// @Summary Delete event
-// @Description delete event
-// @Produce  json
-// @Param id path int true "Event ID"
-// @Router /events/{id} [delete]
+// @Tags			events
+// @ID				delete-event
+// @Summary		Delete event
+// @Description	delete event
+// @Produce		json
+// @Param			id	path	int	true	"Event ID"
+// @Router			/event-tracking/events/{id} [delete]
 func DeleteEvent(context *gin.Context) {
 	// Get model if exist
 	var event models.Event
@@ -130,10 +130,10 @@ func DeleteEvent(context *gin.Context) {
 
 type Server struct{}
 
-// @Tags events
-// @ID create-event-grpc
-// @Summary Create event
-// @Description create event
+// @Tags			events
+// @ID				create-event-grpc
+// @Summary		Create event
+// @Description	create event
 func (s *Server) CreateEvent(ctx context.Context, event *proto.Event) (*proto.Event, error) {
 	// Log the incoming event
 	log.Printf("[gRPC] %s Received event: %v", time.Now().Format(time.RFC3339), event)

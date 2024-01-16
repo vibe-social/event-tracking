@@ -8,12 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Tags health
-// @ID health-check
-// @Summary Health check
-// @Description health check
-// @Produce  json
-// @Router /health [get]
+// @Tags			health
+// @ID				health-check
+// @Summary		Health check
+// @Description	health check
+// @Produce		json
+// @Router			/event-tracking/health [get]
 func CheckHealth(context *gin.Context) {
 	// General Health
 	generalHealthStatus, generalHealthComponents := utils.CheckHealthGeneral(context)
@@ -63,12 +63,12 @@ func CheckHealth(context *gin.Context) {
 	})
 }
 
-// @Tags health
-// @ID health-check-general
-// @Summary General health check
-// @Description general health check
-// @Produce  json
-// @Router /health/general [get]
+// @Tags			health
+// @ID				health-check-general
+// @Summary		General health check
+// @Description	general health check
+// @Produce		json
+// @Router			/event-tracking/health/general [get]
 func CheckHealthGeneral(context *gin.Context) {
 	// Check the general health
 	generalHealthStatus, generalHealthComponent := utils.CheckHealthGeneral(context)
@@ -85,12 +85,12 @@ func CheckHealthGeneral(context *gin.Context) {
 	})
 }
 
-// @Tags health
-// @ID health-check-disk
-// @Summary Disk health check
-// @Description disk health check
-// @Produce  json
-// @Router /health/disk [get]
+// @Tags			health
+// @ID				health-check-disk
+// @Summary		Disk health check
+// @Description	disk health check
+// @Produce		json
+// @Router			/event-tracking/health/disk [get]
 func CheckHealthDisk(context *gin.Context) {
 	// Check the disk health
 	diskHealthStatus, diskHealthComponent := utils.CheckHealthDisk(context)
@@ -107,12 +107,12 @@ func CheckHealthDisk(context *gin.Context) {
 	})
 }
 
-// @Tags health
-// @ID health-check-cpu
-// @Summary CPU health check
-// @Description cpu health check
-// @Produce  json
-// @Router /health/cpu [get]
+// @Tags			health
+// @ID				health-check-cpu
+// @Summary		CPU health check
+// @Description	cpu health check
+// @Produce		json
+// @Router			/event-tracking/health/cpu [get]
 func CheckHealthCPU(context *gin.Context) {
 	// Check the CPU health
 	cpuHealthStatus, cpuHealthComponent := utils.CheckHealthCPU(context)
@@ -129,12 +129,12 @@ func CheckHealthCPU(context *gin.Context) {
 	})
 }
 
-// @Tags health
-// @ID health-check-goroutine
-// @Summary Goroutine health check
-// @Description goroutine health check
-// @Produce  json
-// @Router /health/goroutine [get]
+// @Tags			health
+// @ID				health-check-goroutine
+// @Summary		Goroutine health check
+// @Description	goroutine health check
+// @Produce		json
+// @Router			/event-tracking/health/goroutine [get]
 func CheckHealthGoroutine(context *gin.Context) {
 	// Check the goroutine health
 	goroutineHealthStatus, goroutineHealthComponent := utils.CheckHealthGoroutine(context)
@@ -151,12 +151,12 @@ func CheckHealthGoroutine(context *gin.Context) {
 	})
 }
 
-// @Tags health
-// @ID health-check-database
-// @Summary Database health check
-// @Description database health check
-// @Produce  json
-// @Router /health/database [get]
+// @Tags			health
+// @ID				health-check-database
+// @Summary		Database health check
+// @Description	database health check
+// @Produce		json
+// @Router			/event-tracking/health/database [get]
 func CheckHealthDatabase(context *gin.Context) {
 	// Check the database health
 	databaseHealthStatus, databaseHealthComponent := utils.CheckHealthDatabase(context)
@@ -173,12 +173,12 @@ func CheckHealthDatabase(context *gin.Context) {
 	})
 }
 
-// @Tags health
-// @ID health-check-kafka
-// @Summary Kafka health check
-// @Description kafka health check
-// @Produce  json
-// @Router /health/kafka [get]
+// @Tags			health
+// @ID				health-check-kafka
+// @Summary		Kafka health check
+// @Description	kafka health check
+// @Produce		json
+// @Router			/event-tracking/health/kafka [get]
 func CheckHealthKafka(context *gin.Context) {
 	// Check the kafka health
 	kafkaHealthStatus, kafkaHealthComponent := utils.CheckHealthKafka(context)
@@ -195,22 +195,22 @@ func CheckHealthKafka(context *gin.Context) {
 	})
 }
 
-// @Tags health
-// @ID health-check-liveness
-// @Summary Liveness health check
-// @Description liveness health check
-// @Produce  json
-// @Router /health/liveness [get]
+// @Tags			health
+// @ID				health-check-liveness
+// @Summary		Liveness health check
+// @Description	liveness health check
+// @Produce		json
+// @Router			/event-tracking/health/liveness [get]
 func CheckHealthLiveness(context *gin.Context) {
 	CheckHealthGeneral(context)
 }
 
-// @Tags health
-// @ID health-check-readiness
-// @Summary Readiness health check
-// @Description readiness health check
-// @Produce  json
-// @Router /health/readiness [get]
+// @Tags			health
+// @ID				health-check-readiness
+// @Summary		Readiness health check
+// @Description	readiness health check
+// @Produce		json
+// @Router			/event-tracking/health/readiness [get]
 func CheckHealthReadiness(context *gin.Context) {
 	CheckHealth(context)
 }

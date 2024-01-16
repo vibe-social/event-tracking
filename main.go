@@ -25,13 +25,15 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-// @title Event Tracking API Documentation
-// @description Event tracking documentation for the social networking app focused on sharing vibes.
-// @version 1.0
-// @contact.name Rok Mokotar
-// @contact.url https://www.linkedin.com/in/mokot/
-// @contact.email rm6551@student.uni-lj.si
+// @title			Event Tracking API Documentation
+// @description	Event tracking documentation for the social networking app focused on sharing vibes.
+// @version		1.0
+// @contact.name	Rok Mokotar
+// @contact.url	https://www.linkedin.com/in/mokot/
+// @contact.email	rm6551@student.uni-lj.si
 func main() {
+	event_tracking := "event-tracking"
+
 	// Set configuration parameters
 	configs.LoadConfig()
 
@@ -47,6 +49,9 @@ func main() {
 
 	// Create the HTTP server
 	httpRouter := gin.Default()
+
+	// Set the API prefix
+	httpRouterGroup := httpRouter.Group(event_tracking)
 
 	// Create the gRPC server
 	server := controllers.Server{}
@@ -68,29 +73,29 @@ func main() {
 	httpRouter.Use(middleware.PrometheusMiddleware())
 
 	// Swagger documentation endpoint
-	httpRouter.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	httpRouterGroup.GET("/openapi/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Prometheus metrics endpoints
-	httpRouter.GET("/metrics", controllers.PrometheusHandler())
-	httpRouter.GET("/metrics/custom", controllers.CustomPrometheusHandler())
+	httpRouterGroup.GET("/metrics", controllers.PrometheusHandler())
+	httpRouterGroup.GET("/metrics/custom", controllers.CustomPrometheusHandler())
 
 	// Specify the HTTP health endpoints and the controllers
-	httpRouter.GET("/health", controllers.CheckHealth)
-	httpRouter.GET("/health/general", controllers.CheckHealthGeneral)
-	httpRouter.GET("/health/disk", controllers.CheckHealthDisk)
-	httpRouter.GET("/health/cpu", controllers.CheckHealthCPU)
-	httpRouter.GET("/health/goroutine", controllers.CheckHealthGoroutine)
-	httpRouter.GET("/health/database", controllers.CheckHealthDatabase)
-	httpRouter.GET("/health/kafka", controllers.CheckHealthKafka)
-	httpRouter.GET("/health/live", controllers.CheckHealthLiveness)
-	httpRouter.GET("/health/ready", controllers.CheckHealthReadiness)
+	httpRouterGroup.GET("/health", controllers.CheckHealth)
+	httpRouterGroup.GET("/health/general", controllers.CheckHealthGeneral)
+	httpRouterGroup.GET("/health/disk", controllers.CheckHealthDisk)
+	httpRouterGroup.GET("/health/cpu", controllers.CheckHealthCPU)
+	httpRouterGroup.GET("/health/goroutine", controllers.CheckHealthGoroutine)
+	httpRouterGroup.GET("/health/database", controllers.CheckHealthDatabase)
+	httpRouterGroup.GET("/health/kafka", controllers.CheckHealthKafka)
+	httpRouterGroup.GET("/health/live", controllers.CheckHealthLiveness)
+	httpRouterGroup.GET("/health/ready", controllers.CheckHealthReadiness)
 
 	// Specify the HTTP events endpoints and the controllers
-	httpRouter.GET("/events", controllers.FindEvents)
-	httpRouter.GET("/events/:id", controllers.FindEvent)
-	httpRouter.POST("/events", controllers.CreateEvent)
-	httpRouter.PATCH("/events/:id", controllers.UpdateEvent)
-	httpRouter.DELETE("/events/:id", controllers.DeleteEvent)
+	httpRouterGroup.GET("/events", controllers.FindEvents)
+	httpRouterGroup.GET("/events/:id", controllers.FindEvent)
+	httpRouterGroup.POST("/events", controllers.CreateEvent)
+	httpRouterGroup.PATCH("/events/:id", controllers.UpdateEvent)
+	httpRouterGroup.DELETE("/events/:id", controllers.DeleteEvent)
 
 	// Specify the gRPC events endpoints and the controllers
 	proto.RegisterEventServiceServer(grpcServer, &server)

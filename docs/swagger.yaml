@@ -31,7 +31,7 @@ info:
   title: Event Tracking API Documentation
   version: "1.0"
 paths:
-  /custom-metrics:
+  /event-tracking/custom-metrics:
     get:
       description: Custom Prometheus metrics
       operationId: custom-prometheus-metrics
@@ -41,7 +41,7 @@ paths:
       summary: Custom Prometheus metrics
       tags:
       - metrics
-  /events:
+  /event-tracking/events:
     get:
       description: get events
       operationId: get-events
@@ -69,7 +69,7 @@ paths:
       summary: Create event
       tags:
       - events
-  /events/{id}:
+  /event-tracking/events/{id}:
     delete:
       description: delete event
       operationId: delete-event
@@ -123,7 +123,7 @@ paths:
       summary: Update event
       tags:
       - events
-  /health:
+  /event-tracking/health:
     get:
       description: health check
       operationId: health-check
@@ -133,7 +133,7 @@ paths:
       summary: Health check
       tags:
       - health
-  /health/cpu:
+  /event-tracking/health/cpu:
     get:
       description: cpu health check
       operationId: health-check-cpu
@@ -143,7 +143,7 @@ paths:
       summary: CPU health check
       tags:
       - health
-  /health/database:
+  /event-tracking/health/database:
     get:
       description: database health check
       operationId: health-check-database
@@ -153,7 +153,7 @@ paths:
       summary: Database health check
       tags:
       - health
-  /health/disk:
+  /event-tracking/health/disk:
     get:
       description: disk health check
       operationId: health-check-disk
@@ -163,7 +163,7 @@ paths:
       summary: Disk health check
       tags:
       - health
-  /health/general:
+  /event-tracking/health/general:
     get:
       description: general health check
       operationId: health-check-general
@@ -173,7 +173,7 @@ paths:
       summary: General health check
       tags:
       - health
-  /health/goroutine:
+  /event-tracking/health/goroutine:
     get:
       description: goroutine health check
       operationId: health-check-goroutine
@@ -183,7 +183,7 @@ paths:
       summary: Goroutine health check
       tags:
       - health
-  /health/kafka:
+  /event-tracking/health/kafka:
     get:
       description: kafka health check
       operationId: health-check-kafka
@@ -193,7 +193,7 @@ paths:
       summary: Kafka health check
       tags:
       - health
-  /health/liveness:
+  /event-tracking/health/liveness:
     get:
       description: liveness health check
       operationId: health-check-liveness
@@ -203,7 +203,7 @@ paths:
       summary: Liveness health check
       tags:
       - health
-  /health/readiness:
+  /event-tracking/health/readiness:
     get:
       description: readiness health check
       operationId: health-check-readiness
@@ -213,7 +213,7 @@ paths:
       summary: Readiness health check
       tags:
       - health
-  /metrics:
+  /event-tracking/metrics:
     get:
       description: Prometheus metrics
       operationId: prometheus-metrics
